@@ -1,4 +1,5 @@
 from supervisor.options import UnhosedConfigParser
+from supervisor.options import ProcessGroupConfig
 from supervisor.datatypes import list_of_strings
 from supervisor.states import SupervisorStates
 from supervisor.states import STOPPED_STATES
@@ -142,6 +143,34 @@ class TwiddlerNamespaceRPCInterface:
                 del group.config.process_configs[index]
 
         del group.processes[process_name]
+        return True
+
+    def addGroup(self, name, priority=999):
+        """ Add a new, empty process group.
+
+        @param string   name         Name for the new process group
+        @param integer  priority     Group priority (same as supervisord.conf)
+        @return boolean              Always True unless error
+        """
+        self._update('addGroup')
+
+        # check group_name does not already exist
+        if self.supervisord.process_groups.get(name) is not None:
+            raise RPCError(SupervisorFaults.BAD_NAME, name)
+
+        # check priority is sane
+        try:
+            int(priority)
+        except ValueError, why:
+            raise RPCError(SupervisorFaults.INCORRECT_PARAMETERS, why[0])
+
+            # make a new group with no process configs
+        options = self.supervisord.options
+        config = ProcessGroupConfig(options, name, priority, [])
+        group = config.make_group()
+
+        # add new process group
+        self.supervisord.process_groups[name] = group
         return True
 
     def _getProcessGroup(self, name):
