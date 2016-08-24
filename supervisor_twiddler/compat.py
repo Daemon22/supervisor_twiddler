@@ -4,13 +4,17 @@ PY3 = sys.version_info[0] == 3
 
 if PY3:
     basestring = str
+
+
     class unicode(str):
         def __init__(self, string, encoding, errors):
             str.__init__(self, string)
 
+
     def _b(x, encoding='latin1'):
         # x should be a str literal
         return bytes(x, encoding)
+
 
     def _u(x, encoding='latin1'):
         # x should be a str literal
@@ -21,9 +25,11 @@ else:
     basestring = basestring
     unicode = unicode
 
+
     def _b(x, encoding='latin1'):
         # x should be a str literal
         return x
+
 
     def _u(x, encoding='latin1'):
         # x should be a str literal

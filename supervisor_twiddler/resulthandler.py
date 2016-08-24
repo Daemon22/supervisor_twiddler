@@ -1,6 +1,7 @@
 from supervisor.dispatchers import RejectEvent
 from supervisor_twiddler.compat import unicode, basestring
 
+
 def stdin_write_handler(event, response):
     """ A supervisor eventlistener result handler that accepts a
     special 'STDIN:' result and writes what follows to the STDIN
@@ -9,6 +10,7 @@ def stdin_write_handler(event, response):
         _stdin_write(event.process, response[6:])
     elif response != 'OK':
         raise RejectEvent(response)
+
 
 def _stdin_write(process, chars):
     """ Write chars to the stdin of process.  If the process is

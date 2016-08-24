@@ -9,14 +9,17 @@ import supervisor.loggers
 
 API_VERSION = '1.0'
 
+
 class Faults:
     NOT_IN_WHITELIST = 230
+
 
 class TwiddlerNamespaceRPCInterface:
     """ A supervisor rpc interface that facilitates manipulation of
     supervisor's configuration and state in ways that are not
     normally accessible at runtime.
     """
+
     def __init__(self, supervisord, whitelist=[]):
         self.supervisord = supervisord
         self._whitelist = list_of_strings(whitelist)
@@ -192,6 +195,7 @@ class TwiddlerNamespaceRPCInterface:
         except (TypeError, ValueError):
             raise RPCError(SupervisorFaults.INCORRECT_PARAMETERS)
         return config
+
 
 def make_twiddler_rpcinterface(supervisord, **config):
     return TwiddlerNamespaceRPCInterface(supervisord, **config)
