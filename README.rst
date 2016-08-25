@@ -15,7 +15,7 @@ automatically install or upgrade:
 
 .. code-block:: bash
 
-    $ pip install -U supervisor_twiddler
+    $ sudo python setup.py install
 
 After installing the package, add these lines to your ``supervisord.conf`` file
 to register the twiddler interface:
@@ -24,6 +24,10 @@ to register the twiddler interface:
 
     [rpcinterface:twiddler]
     supervisor.rpcinterface_factory = supervisor_twiddler.rpcinterface:make_twiddler_rpcinterface
+
+    [ctlplugin:twiddler]
+    supervisor.ctl_factory = supervisor_twiddler.controllerplugin:make_twiddler_controllerplugin
+    config_dir:/etc/supervisor/conf.d/
 
 You must restart Supervisor for the twiddler interface to be loaded.
 
@@ -34,6 +38,9 @@ There are times when it is useful to be able to dynamically add and remove
 process configurations on a supervisord instance. This is the functionality
 that supervisor_twiddler provides. After restarting supervisord, the changes
 made by supervisor_twiddler will not persist.
+
+XML-RPC
+-------
 
 The following Python interpreter session demonstrates the usage.
 
@@ -82,6 +89,30 @@ not think its quick termination was an error.
 
 The process was then started and its output read using the normal API commands
 provided by Supervisor.
+
+
+Supervisorctl
+-------------
+
+Each command provides a thin wrapper around an XML-RPC method:
+
+    supervisor> add_program cat {"command":"cat","name":"cat"}
+    cat:cat: ADDED
+    supervisor> del_program cat
+    cat:cat REMOVED
+
+'add_program <group_name> [options]':
+    group_name: name of the group to add the new program
+    options: json formatted string, These are the same options as in the supervisor.conf program section
+    and follow the same rules
+
+    If the option is not given, it will search the options from the 'config_dir' set in supervisor.conf.
+    The filename need to be the same as the program_group followed by .conf
+
+'add_program <group_name[:name]>':
+    group_name: name of the group to remove a program from, if the name is not given, it will remove the last
+    one (Alphabetical order), if the name is '*' it will remove all the group
+
 
 API Description
 ---------------
@@ -165,6 +196,20 @@ the `twiddler.removeProcessFromGroup()` method can be used:
 
 To be removed, the process must not be running. It must have terminated on its
 own or have been stopped with `supervisor.stopProcess()`.
+
+Adding a New Group
+------------------
+
+Dynamically add groups that are not listed in `supervisor.conf`, the groups will be listed in
+`twiddler.getGroupNames()` and will not be persisted after Supervisor is shut down.
+
+.. code:: python
+
+    twiddler.addGroup("group_name", "priority")
+
+The first parameter (`group_name`) is the group name.
+
+The second parameter (`priority`) is the Group priority (same as supervisord.conf)
 
 Logging a Message
 -----------------
