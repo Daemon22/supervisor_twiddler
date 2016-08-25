@@ -15,6 +15,14 @@ class TwiddlerControllerPlugin(ControllerPluginBase):
     #   add_program
 
     def do_add_program(self, args):
+        """
+        :param program_group: name of the group to add the new program
+        ;:param options: json formatted string, These are the same options as in the supervisor.conf program section
+        and follow the same rules
+
+        If the option is not given, it will search the options from the 'config_dir' set in supervisor.conf.
+        The filename need to be the same as the program_group followed by .conf
+        """
         if 1 > len(args.split()) > 2:
             self.help_add_program()
 
@@ -44,7 +52,7 @@ class TwiddlerControllerPlugin(ControllerPluginBase):
             program_options.pop('process_name', None)
 
             self.twiddler.addProgramToGroup(program_group, worker_num, program_options)
-            self.ctl.output("{}:{} was added.".format(program_group, worker_num))
+            self.ctl.output("{}:{} ADDED".format(program_group, worker_num))
         else:
             program_group, program_options = args.split()
             try:
@@ -57,7 +65,7 @@ class TwiddlerControllerPlugin(ControllerPluginBase):
                 self.twiddler.addGroup(program_group)
 
             self.twiddler.addProgramToGroup(program_group, program_options.get("name", program_group), program_options)
-            self.ctl.output("{}:{}: added.".format(program_group, program_options.get("name")))
+            self.ctl.output("{}:{}: ADDED".format(program_group, program_options.get("name")))
 
     def help_add_program(self):
         self.ctl.output("add_program <group_name> [options]\n"
@@ -111,7 +119,7 @@ class TwiddlerControllerPlugin(ControllerPluginBase):
             self.supervisor.stopProcess(full_name)
 
         self.twiddler.removeProcessFromGroup(group, name)
-        self.ctl.output("{}:{} was removed.".format(group, name))
+        self.ctl.output("{}:{} REMOVED".format(group, name))
 
 
 def make_twiddler_controllerplugin(controller, **config):
