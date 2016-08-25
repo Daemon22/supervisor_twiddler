@@ -1,7 +1,7 @@
-__version__ = '1.1.0-dev'
-
 import os
 import sys
+
+__version__ = '1.1.1-dev'
 
 py_version = sys.version_info[:2]
 
@@ -17,6 +17,7 @@ if py_version < (3, 3):
     tests_require.append('mock')
 
 from setuptools import setup, find_packages
+
 here = os.path.abspath(os.path.dirname(__file__))
 
 DESC = """\
@@ -40,25 +41,25 @@ CLASSIFIERS = [
     'Programming Language :: Python :: 3.4',
     'Topic :: System :: Boot',
     'Topic :: System :: Systems Administration',
-    ]
+]
 
 setup(
-    name = 'supervisor_twiddler',
-    version = __version__,
-    license = 'License :: OSI Approved :: BSD License',
-    url = 'http://github.com/mnaberez/supervisor_twiddler',
-    description = "supervisor_twiddler RPC extension for Supervisor",
-    long_description= DESC,
-    classifiers = CLASSIFIERS,
-    author = "Mike Naberezny",
-    author_email = "mike@naberezny.com",
-    maintainer = "Mike Naberezny",
-    maintainer_email = "mike@naberezny.com",
-    packages = find_packages(),
-    install_requires = ['supervisor >= 3.0a10'],
-    tests_require = tests_require,
-    include_package_data = True,
-    zip_safe = False,
-    namespace_packages = ['supervisor_twiddler'],
-    test_suite = 'supervisor_twiddler.tests'
+    name='supervisor_twiddler',
+    version=__version__,
+    license='License :: OSI Approved :: BSD License',
+    url='http://github.com/mnaberez/supervisor_twiddler',
+    description="supervisor_twiddler RPC extension for Supervisor",
+    long_description=DESC,
+    classifiers=CLASSIFIERS,
+    author="Mike Naberezny",
+    author_email="mike@naberezny.com",
+    maintainer="Mike Naberezny",
+    maintainer_email="mike@naberezny.com",
+    packages=find_packages(),
+    install_requires=['supervisor >= 3.0a10'],
+    tests_require=tests_require,
+    include_package_data=True,
+    zip_safe=False,
+    namespace_packages=['supervisor_twiddler'],
+    test_suite='supervisor_twiddler.tests'
 )
